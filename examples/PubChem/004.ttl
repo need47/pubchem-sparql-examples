@@ -1,0 +1,34 @@
+@prefix ex: <https://pubchem.ncbi.nlm.nih.gov/docs/rdf/.well-known/sparql-examples/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix spex:<https://purl.expasy.org/sparql-examples/ontology#> .
+
+ex:004 a sh:SPARQLExecutable,
+        sh:SPARQLSelectExecutable ;
+    rdfs:comment "What substances have a pharmacological role of NSAID as defined by CHEBI and chemical vendor information?"^^rdf:HTML ;
+    sh:prefixes _:sparql_examples_prefixes ;
+    sh:select """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX concept: <http://rdf.ncbi.nlm.nih.gov/pubchem/concept/>
+
+SELECT DISTINCT ?substance ?source
+FROM <http://rdf.ncbi.nlm.nih.gov/pubchem/substance>
+FROM <http://rdf.ncbi.nlm.nih.gov/pubchem/source>
+FROM <http://rdf.ncbi.nlm.nih.gov/pubchem/ruleset>
+WHERE {
+  ?substance dcterms:source ?source .
+  ?source dcterms:subject concept:Chemical_Vendors .
+  ?substance rdf:type ?chebi .
+  ?chebi rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty obo:RO_0000087 ;
+    owl:someValuesFrom obo:CHEBI_35475
+  ] .
+}""" ;
+    schema:keywords "pharmacology", "role", "vendor" ;
+    schema:target <https://pubchem.ncbi.nlm.nih.gov/docs/rdf/> .

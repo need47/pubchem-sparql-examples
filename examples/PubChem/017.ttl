@@ -1,0 +1,25 @@
+@prefix ex: <https://pubchem.ncbi.nlm.nih.gov/docs/rdf/.well-known/sparql-examples/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix spex:<https://purl.expasy.org/sparql-examples/ontology#> .
+
+ex:017 a sh:SPARQLExecutable,
+        sh:SPARQLSelectExecutable ;
+    rdfs:comment "What are the four drug-likeness properties of Aspirin according to Lipinski's Rule of Five?"^^rdf:HTML ;
+    sh:prefixes _:sparql_examples_prefixes ;
+    sh:select """PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX vocab: <http://rdf.ncbi.nlm.nih.gov/pubchem/vocabulary#>
+
+SELECT ?MW ?HBD ?HBA ?LogP
+FROM <http://rdf.ncbi.nlm.nih.gov/pubchem/compound>
+WHERE {
+?compound skos:prefLabel "Aspirin";
+          vocab:molecular_weight ?MW ;
+          vocab:hydrogen_bond_donor_count ?HBD ;
+          vocab:hydrogen_bond_acceptor_count ?HBA ;
+          vocab:xlogp3 ?LogP .
+}""" ;
+    schema:keywords "drug-likeness", "Lipinski" ;
+    schema:target <https://pubchem.ncbi.nlm.nih.gov/docs/rdf/> .

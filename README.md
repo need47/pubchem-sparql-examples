@@ -1,6 +1,6 @@
-# SPARQL examples
+# PubChem SPARQL examples
 
-This is a collection of SPARQL examples usable on different SIB related SPARQL endpoints or datasets. The examples are stored one query per file in project specific repositories in the [examples](https://github.com/sib-swiss/sparql-examples/tree/master/examples) folder.
+This is a collection of SPARQL examples usable on different NIH related SPARQL endpoints or datasets, such as PubChem. The examples are stored one query per file in project specific repositories in the [examples](https://github.com/sib-swiss/sparql-examples/tree/master/examples) folder.
 
 Each SPARQL query is itself in a turtle file. We use the following ontologies for the basic concepts.
 
@@ -45,12 +45,12 @@ SELECT DISTINCT ?protein ?chemblEntry WHERE {
 
 ## Artifact generation and quality assurance
 
-We use the [SIB SPARQL Examples utils](https://github.com/sib-swiss/sparql-examples-utils/) for testing and generating artifacts.
+We use the [SPARQL Examples utils](https://github.com/sib-swiss/sparql-examples-utils/) for testing and generating artifacts.
 
 First, download the jar file with:
 
 ```bash
-wget -O sparql-examples-utils.jar 'https://github.com/sib-swiss/sparql-examples-utils/releases/download/v2.0.19/sparql-examples-utils-2.0.19-uber.jar'
+wget -O sparql-examples-utils.jar 'https://github.com/sib-swiss/sparql-examples-utils/releases/download/v2.0.20/sparql-examples-utils-2.0.20-uber.jar'
 ```
 
 ### Compile all query files into one file to upload to your endpoint
@@ -58,7 +58,7 @@ wget -O sparql-examples-utils.jar 'https://github.com/sib-swiss/sparql-examples-
 Compile all query files for a specific example folder, into a local file including the prefixes/namespaces definitions:
 
 ```bash
-java -jar sparql-examples-utils.jar convert -i examples/ -p UniProt -f ttl > examples_UniProt.ttl
+java -jar sparql-examples-utils.jar convert -i examples/ -p PubChem -f ttl > examples_PubChem.ttl
 ```
 
 > You can then load this file to this project SPARQL endpoint! We recommend to upload it to a named graph: your endpoint URL + `/.well-known/sparql-examples`
@@ -94,14 +94,6 @@ java -jar sparql-examples-utils.jar test --input-directory=./examples
 
 should return no test failures. RDF4j and Jena are both a lot stricter than virtuoso.
 
-The queries can be executed automatically on all endpoints they apply to using an extra argument `--also-run-slow-tests`:
-
-```bash
-java -jar sparql-examples-utils.jar test --input-directory=./examples/MetaNetX --also-run-slow-tests
-```
-
-> This does change the queries to add a LIMIT 1 if no limit was set in the query. Then check if there is a result it is fetched.
-
 ## Querying for queries
 
 As the SPARQL examples are themselves RDF, they can be queried for as soon as they are loaded in a SPARQL endpoint.
@@ -118,27 +110,3 @@ WHERE {
 } ORDER BY ?sq
 ```
 
-## Finding queries that run on more than one endpoint
-
-This expects the Jena tools to be available in your $PATH. e.g. `export PATH="$JENA_HOME/bin:$PATH"`
-
-```bash
-java -jar sparql-examples-utils.jar convert -i examples/ -p all -f ttl > examples_all.ttl
-
-sparql --data examples_all.ttl "SELECT ?query (GROUP_CONCAT(?target ; separator=', ') AS ?targets) WHERE { ?query <https://schema.org/target> ?target } GROUP BY ?query HAVING (COUNT(DISTINCT ?target) > 1) "
-```
-
-## How to cite this work
-
-If you reuse any part of this work, please cite [the GigaScience paper](https://academic.oup.com/gigascience/article/doi/10.1093/gigascience/giaf045/8133871):
-
-```
-@misc{largecollectionsparqlquestionquery,
-    author = {Bolleman, Jerven and Emonet, Vincent and Altenhoff, Adrian and Bairoch, Amos and Blatter, Marie-Claude and Bridge, Alan and Duvaud, Severine and Gasteiger, Elisabeth and Kuznetsov, Dmitry and Moretti, Sebastien and Michel, Pierre-Andre and Morgat, Anne and Pagni, Marco and Redaschi, Nicole and Zahn-Zabal, Monique and Mendes de Farias, Tarcisio and Sima, Ana Claudia},
-    doi = {10.1093/gigascience/giaf045},
-    month = {10},
-    title = {A large collection of bioinformatics question-query pairs over federated knowledge graphs: methodology and applications},
-    url = {https://github.com/sib-swiss/sparql-examples-utils},
-    year = {2024}
-}
-```

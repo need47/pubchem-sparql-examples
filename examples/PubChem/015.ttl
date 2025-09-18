@@ -1,0 +1,28 @@
+@prefix ex: <https://pubchem.ncbi.nlm.nih.gov/docs/rdf/.well-known/sparql-examples/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix spex:<https://purl.expasy.org/sparql-examples/ontology#> .
+
+ex:015 a sh:SPARQLExecutable,
+        sh:SPARQLSelectExecutable ;
+    rdfs:comment "What chemicals are commonly mentioned with the fibroblast growth factor receptor 1 gene (FGFR1)?"^^rdf:HTML ;
+    sh:prefixes _:sparql_examples_prefixes ;
+    sh:select """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX gene: <http://rdf.ncbi.nlm.nih.gov/pubchem/gene/>
+
+SELECT ?compound
+FROM <http://rdf.ncbi.nlm.nih.gov/pubchem/cooccurrence>
+FROM <http://rdf.ncbi.nlm.nih.gov/pubchem/gene>
+WHERE {
+  ?cooccurrence rdf:subject ?genesymbol .
+  ?genesymbol rdf:type sio:SIO_001383 ;
+              sio:SIO_000300 "fgfr1" .
+  ?cooccurrence rdf:object ?compound .
+  ?cooccurrence rdf:type sio:SIO_001257 .
+  ?cooccurrence sio:SIO_000300 ?score .
+}""" ;
+    schema:keywords "chemical", "gene", "co-occurrence" ;
+    schema:target <https://pubchem.ncbi.nlm.nih.gov/docs/rdf/> .

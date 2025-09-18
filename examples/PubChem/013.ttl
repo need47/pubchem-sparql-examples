@@ -1,0 +1,31 @@
+@prefix ex: <https://pubchem.ncbi.nlm.nih.gov/docs/rdf/.well-known/sparql-examples/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix spex:<https://purl.expasy.org/sparql-examples/ontology#> .
+
+ex:013 a sh:SPARQLExecutable,
+        sh:SPARQLSelectExecutable ;
+    rdfs:comment "What are the top 20 genes co-mentioned with indomethacin (CID3715)?"^^rdf:HTML ;
+    sh:prefixes _:sparql_examples_prefixes ;
+    sh:select """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX compound: <http://rdf.ncbi.nlm.nih.gov/pubchem/compound/>
+
+SELECT ?gene ?geneid ?prefLabel
+FROM <http://rdf.ncbi.nlm.nih.gov/pubchem/cooccurrence>
+FROM <http://rdf.ncbi.nlm.nih.gov/pubchem/gene>
+WHERE {
+  ?cooccurrence rdf:subject compound:CID3715 .
+  ?cooccurrence rdf:object ?gene .
+  ?cooccurrence rdf:type sio:SIO_001257 .
+  ?cooccurrence sio:SIO_000300 ?score .
+  ?geneid <http://www.bioassayontology.org/bao#BAO_0002870> ?gene .
+  ?geneid <http://purl.uniprot.org/core/organism> <http://rdf.ncbi.nlm.nih.gov/pubchem/taxonomy/TAXID9606> .
+  ?geneid <http://www.w3.org/2004/02/skos/core#prefLabel> ?prefLabel .
+}
+ORDER BY DESC(?score)
+LIMIT 20""" ;
+    schema:keywords "gene", "compound", "co-occurrence" ;
+    schema:target <https://pubchem.ncbi.nlm.nih.gov/docs/rdf/> .
